@@ -390,7 +390,7 @@ return (
         type="text"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Search items..."
+        placeholder="Search items..." style={{ width: '100%', padding: 12, borderRadius: 10, border: '1px solid #ccc', marginBottom: 16, fontSize: 16 }}
         style={{ width: '100%', padding: 12, borderRadius: 10, border: '1px solid #ccc', marginBottom: 16 }}
       />
 
@@ -443,7 +443,7 @@ return (
               type="text"
               value={addonSearch}
               onChange={(e) => setAddonSearch(e.target.value)}
-              placeholder="Search addons..."
+              placeholder="Search addons..." style={{ width: '96%', padding: 6, fontSize: 16, marginBottom: 10, borderRadius: 6, border: '1px solid #ccc' }}
               style={{ width: '96%', padding: 6, fontSize: 14, marginBottom: 10, borderRadius: 6, border: '1px solid #ccc' }}
             />
 
@@ -504,7 +504,7 @@ return (
                   type="number"
                   value={customTip}
                   onChange={(e) => setCustomTip(e.target.value)}
-                  style={{ marginLeft: 8, width: 80, padding: 6, borderRadius: 6, border: '1px solid #ccc' }}
+                  style={{ marginLeft: 8, width: 80, padding: 6, borderRadius: 6, border: '1px solid #ccc', fontSize: 16 }}
                 />
               </label>
               <p>Subtotal: ${subtotal.toFixed(2)}</p>
