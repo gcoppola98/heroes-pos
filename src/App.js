@@ -223,6 +223,7 @@ const addonCategories = [
       { name: 'Extra Roasted Peppers', price: 3 },
       { name: 'Extra Hot Cherry Peppers', price: 2 },
       { name: 'Extra Hot Stuffed Peppers', price: 3 },
+      { name: 'Jalapeños', price: 1 },
       { name: 'Extra Sweet Stuffed Peppers', price: 3 },
       { name: 'Extra Peppers & Onions', price: 2 },
   ]},
