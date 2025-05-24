@@ -160,14 +160,14 @@ const items = [
 
   // Appetizers
   { id: 'A1', name: '5 for $6', price: 6, category: 'Appetizers' },
-  { id: 'A2', name: 'Side of Extra Sauce', price: 2, category: 'Appetizers' },
+  { id: 'A2', name: 'Side of Sauce', price: 2, category: 'Appetizers' },
   { id: 'A3', name: 'Rice Balls', price: 1.5, category: 'Appetizers' },
   { id: 'A4', name: 'Potato Croquettes', price: 1.5, category: 'Appetizers' },
   { id: 'A5', name: 'Prosciutto Balls', price: 1.5, category: 'Appetizers' },
-  { id: 'A6', name: 'Pepperoni and Cheddar Rice Balls', price: 1.5, category: 'Appetizers' },
+  { id: 'A6', name: 'Pepp and Ched Rice Balls', price: 1.5, category: 'Appetizers' },
   { id: 'A7', name: 'Breaded Ravioli', price: 1.5, category: 'Appetizers' },
-  { id: 'A8', name: 'Large Sicilian Rice Balls', price: 6.5, category: 'Appetizers' },
-  { id: 'A9', name: 'Rice Ball Special with Mozzarella and Sauce', price: 9.5, category: 'Appetizers' },
+  { id: 'A8', name: 'Large Rice Balls', price: 6.5, category: 'Appetizers' },
+  { id: 'A9', name: 'Rice Ball Special', price: 9.5, category: 'Appetizers' },
   { id: 'A10', name: 'Mozzarella Carozza', price: 4.95, category: 'Appetizers' },
   { id: 'A11', name: '1 LB. Stuffed Mushrooms', price: 11.99, category: 'Appetizers' },
   { id: 'A12', name: '1/2 LB. Potato Salad', price: 3, category: 'Appetizers' },
@@ -176,6 +176,24 @@ const items = [
   { id: 'A15', name: '1 LB. Macaroni Salad', price: 6, category: 'Appetizers' },
   { id: 'A16', name: '1/2 LB. Coleslaw', price: 3, category: 'Appetizers' },
   { id: 'A17', name: '1 LB. Coleslaw', price: 6, category: 'Appetizers' },
+
+  { id: "B1", name: "20oz Soda", price: 3.0, category: "Beverages" },
+  { id: "B2", name: "2 Liter Soda", price: 5.0, category: "Beverages" },
+  { id: "B3", name: "12oz. Boylan", price: 3.0, category: "Beverages" },
+  { id: "B4", name: "12oz. Manhattan Special", price: 4.0, category: "Beverages" },
+  { id: "B5", name: "8oz Red Bull", price: 3.5, category: "Beverages" },
+  { id: "B6", name: "11oz Pellegrino", price: 3.0, category: "Beverages" },
+  { id: "B7", name: "Snapple", price: 3.0, category: "Beverages" },
+  { id: "B8", name: "Gatorade", price: 3.0, category: "Beverages" },
+  { id: "B9", name: "Vitamin Water", price: 3.0, category: "Beverages" },
+
+  { id: "C1", name: "Hals", price: 2.0, category: "Chips" },
+  { id: "C2", name: "Small Wise", price: 2.5, category: "Chips" },
+  { id: "C3", name: "Large Wise", price: 4.79, category: "Chips" },
+
+  { id: "K1", name: "Chicken Fingers", price: 5.0, category: "Kid's Menu" },
+  { id: "K2", name: "Pasta", price: 5.0, category: "Kid's Menu" },
+  { id: "K3", name: "Sandwich", price: 5.0, category: "Kid's Menu" },
 ];
 
 const addonCategories = [
@@ -265,6 +283,7 @@ function App() {
   const [addonQuantities, setAddonQuantities] = useState({});
   const [editIndex, setEditIndex] = useState(null);
   const [customTip, setCustomTip] = useState(0);
+  const [manualSubtotal, setManualSubtotal] = useState('');
   const [expandedAddonCategories, setExpandedAddonCategories] = useState([]);
   const [showCart, setShowCart] = useState(false);
   const [addonSearch, setAddonSearch] = useState("");
@@ -331,7 +350,8 @@ function App() {
 
   function saveToCart() {
     const addons = Object.entries(addonQuantities).map(([name, qty]) => {
-      const price = addonCategories.flatMap(c => c.options).find(opt => opt.name === name)?.price || 0;
+      const price = addonCategories.flatMap(c => c.options).find(opt => opt.name === name)?.price ??
+                  specialCustomAddons.find(opt => opt.name === name)?.price ?? 0;
       return { name, qty, price };
     });
     const itemWithAddons = {
@@ -346,6 +366,8 @@ function App() {
       return updated;
     });
     setSelectedItem(null);
+    setAddonSearch('');
+    setExpandedAddonCategories([]);
     setAddonQuantities({});
     setEditIndex(null);
   }
@@ -364,7 +386,8 @@ function App() {
     });
   }
 
-  const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
+  const rawSubtotal = cart.reduce((sum, item) => sum + item.total, 0);
+  const subtotal = manualSubtotal ? parseFloat(manualSubtotal) || 0 : rawSubtotal;
   const tip = Number(customTip);
   const subtotalWithTip = subtotal + tip;
   const tax = subtotalWithTip * 0.08875;
@@ -372,9 +395,30 @@ function App() {
   const serviceFee = subtotalWithTax * 0.0395;
   
   function clearCart() {
+    setManualSubtotal('');
     setCart([]);
     setCustomTip(0);
   }
+
+
+  function groupCartItems(cart) {
+    const grouped = [];
+    cart.forEach(item => {
+      const matchIndex = grouped.findIndex(g =>
+        g.name === item.name &&
+        JSON.stringify(g.addons) === JSON.stringify(item.addons)
+      );
+      if (matchIndex >= 0) {
+        grouped[matchIndex].quantity += 1;
+        grouped[matchIndex].total += item.total;
+      } else {
+        grouped.push({ ...item, quantity: 1 });
+      }
+    });
+    return grouped;
+  }
+
+  const groupedCart = groupCartItems(cart);
 
 const finalTotal = subtotalWithTax + serviceFee;
 
@@ -421,13 +465,21 @@ return (
       </div>
 
       {selectedItem && isHeroItem(selectedItem) && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backdropFilter: 'blur(4px)', backgroundColor: 'rgba(0,0,0,0.4)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }}>
-          <div style={{ background: 'white', padding: 20, borderRadius: 18, width: '90%', maxWidth: 500, maxHeight: '90%', overflowY: 'auto', WebkitOverflowScrolling: 'touch', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backdropFilter: 'blur(4px)', backgroundColor: 'rgba(0,0,0,0.4)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }} onClick={(e) => {
+      if (e.target === e.currentTarget) {
+        setSelectedItem(null);
+        setAddonSearch('');
+        setExpandedAddonCategories([]);
+      }
+    }}>
+          <div onClick={(e) => e.stopPropagation()} style={{ background: 'white', padding: 20, borderRadius: 18, width: '90%', maxWidth: 500, maxHeight: '90%', overflowY: 'auto', WebkitOverflowScrolling: 'touch', boxShadow: '0 4px 12px rgba(0,0,0,0.2)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <h2 style={{ margin: 0 }}>Customize {selectedItem.name}</h2>
               <div>
-                <button onClick={() => setSelectedItem(null)} style={{ marginRight: 12, padding: '8px 12px', borderRadius: 8, border: '1px solid #ccc', background: '#f2f2f2' }}>Cancel</button>
+                <button onClick={() => { setSelectedItem(null);
+    setAddonSearch('');
+    setExpandedAddonCategories([]); setAddonSearch(''); setExpandedAddonCategories([]); }} style={{ marginRight: 12, padding: '8px 12px', borderRadius: 8, border: '1px solid #ccc', background: '#f2f2f2' }}>Cancel</button>
                 <button onClick={saveToCart} style={{ padding: '8px 12px', borderRadius: 8, background: '#007AFF', color: '#fff', border: 'none' }}>Add to Cart</button>
               </div>
             </div>
@@ -478,12 +530,12 @@ return (
 
       {/* Cart Modal */}
       {showCart && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }} onClick={(e) => { if (e.target === e.currentTarget) { setShowCart(false); setManualSubtotal(''); } }}>
           <div style={{ background: '#fff', padding: 20, borderRadius: 18, width: '90%', maxWidth: 500, maxHeight: '90%', overflowY: 'auto' }}>
-            {cart.map((item, idx) => (
+            {groupedCart.map((item, idx) => (
               <div key={idx} style={{ background: '#f2f2f2', padding: 12, borderRadius: 10, marginBottom: 10 }}>
                 <div>
-                  <strong>{item.name}</strong> - ${item.total.toFixed(2)}
+                  <strong>{item.name}</strong>{item.quantity > 1 ? ` × ${item.quantity}` : ''} - ${item.total.toFixed(2)}
                   <button onClick={() => openCustomization(item, idx)} style={{ marginLeft: 10 }}>Edit</button>
                   <button onClick={() => removeFromCart(idx)} style={{ marginLeft: 10, color: 'red' }}>Remove</button>
                 </div>
@@ -499,6 +551,30 @@ return (
             ))}
 
             <div style={{ marginTop: 20 }}>
+              
+              
+              
+              <label style={{ display: 'block', marginBottom: 8 }}>
+                Manual Subtotal: $
+                <input
+                  type="number"
+                  value={manualSubtotal}
+                  onChange={(e) => setManualSubtotal(e.target.value)}
+                  placeholder={rawSubtotal.toFixed(2)}
+                  style={{ marginLeft: 8, width: 100, padding: 6, borderRadius: 6, border: '1px solid #ccc', fontSize: '16px' }}
+                />
+                <button onClick={() => {
+                  const base = parseFloat(manualSubtotal || rawSubtotal.toFixed(2));
+                  setManualSubtotal((base - 0.50).toFixed(2));
+                }} style={{ marginLeft: 8, padding: '2px 8px' }}>−</button>
+                <button onClick={() => {
+                  const base = parseFloat(manualSubtotal || rawSubtotal.toFixed(2));
+                  setManualSubtotal((base + 0.50).toFixed(2));
+                }} style={{ marginLeft: 4, padding: '2px 8px' }}>+</button>
+              </label>
+
+
+
               <label style={{ display: 'block', marginBottom: 8 }}>
                 Tip: $
                 <input
@@ -523,7 +599,7 @@ return (
                 Clear Cart
               </button>
 
-<button onClick={() => setShowCart(false)} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #ccc', background: '#f2f2f2' }}>Close Cart</button>
+<button onClick={() => { setShowCart(false); setManualSubtotal(''); }} style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid #ccc', background: '#f2f2f2' }}>Close Cart</button>
             </div>
           </div>
         </div>
