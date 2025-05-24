@@ -194,7 +194,8 @@ const items = [
   { id: "K1", name: "Chicken Fingers", price: 5.0, category: "Kid's Menu" },
   { id: "K2", name: "Pasta", price: 5.0, category: "Kid's Menu" },
   { id: "K3", name: "Sandwich", price: 5.0, category: "Kid's Menu" },
-];
+
+  ];
 
 const addonCategories = [
   { title: 'Extra Meat Options', options: [
@@ -535,7 +536,90 @@ return (
             {groupedCart.map((item, idx) => (
               <div key={idx} style={{ background: '#f2f2f2', padding: 12, borderRadius: 10, marginBottom: 10 }}>
                 <div>
-                  <strong>{item.name}</strong>{item.quantity > 1 ? ` × ${item.quantity}` : ''} - ${item.total.toFixed(2)}
+                  <strong>{item.name}</strong>{item.quantity > 1 ? ` × ${item.quantity}` : ''} - ${(item.price * item.quantity).toFixed(2)}
+{
+  item.category?.includes('Hero') && (() => {
+    const matchingCartItem = cart.find(
+      cartItem => cartItem.name === item.name && JSON.stringify(cartItem.addons) === JSON.stringify(item.addons)
+    );
+    return matchingCartItem ? (
+      <div style={{ marginTop: 8 }}>
+        <label style={{ fontSize: 14 }}>
+          Manual Price: $
+          <input
+            type="number"
+            value={matchingCartItem.manualPrice ?? ''}
+            onChange={(e) => {
+              const updatedCart = cart.map(cartItem => {
+                if (
+                  cartItem.name === item.name &&
+                  JSON.stringify(cartItem.addons) === JSON.stringify(item.addons)
+                ) {
+                  const manualPrice = parseFloat(e.target.value) || 0;
+                  return {
+                    ...cartItem,
+                    manualPrice,
+                    total:
+                      manualPrice +
+                      cartItem.addons.reduce(
+                        (sum, a) => sum + a.price * a.qty,
+                        0
+                      )
+                  };
+                }
+                return cartItem;
+              });
+              setCart(updatedCart);
+            }}
+            style={{
+              marginLeft: 8,
+              width: 80,
+              padding: 4,
+              borderRadius: 6,
+              border: '1px solid #ccc',
+              fontSize: '14px',
+            }}
+          />
+        </label>
+      </div>
+    ) : null;
+  })()
+}
+
+                {item.category?.includes('Hero') && (
+                  <div style={{ marginTop: 8 }}>
+                    <label style={{ fontSize: 14 }}>
+                      Manual Price: $
+                      <input
+                        type="number"
+                        value={item.manualPrice ?? ''}
+                        onChange={(e) => {
+                          const updatedCart = [...cart];
+                          updatedCart[item.indexes[0]] = {
+                            ...updatedCart[item.indexes[0]],
+                            manualPrice: parseFloat(e.target.value) || 0,
+                            total:
+                              (parseFloat(e.target.value) || 0) +
+                              updatedCart[item.indexes[0]].addons.reduce(
+                                (sum, a) => sum + a.price * a.qty,
+                                0
+                              ),
+                          };
+                          setCart(updatedCart);
+                        }}
+                        style={{
+                          marginLeft: 8,
+                          width: 80,
+                          padding: 4,
+                          borderRadius: 6,
+                          border: '1px solid #ccc',
+                          fontSize: '14px',
+                        }}
+                      />
+                    </label>
+                  </div>
+                )}
+
                   <button onClick={() => openCustomization(item, idx)} style={{ marginLeft: 10 }}>Edit</button>
                   <button onClick={() => removeFromCart(idx)} style={{ marginLeft: 10, color: 'red' }}>Remove</button>
                 </div>
