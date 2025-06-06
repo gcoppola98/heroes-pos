@@ -193,9 +193,54 @@ const items = [
 
   { id: "K1", name: "Chicken Fingers", price: 5.0, category: "Kid's Menu" },
   { id: "K2", name: "Pasta", price: 5.0, category: "Kid's Menu" },
-  { id: "K3", name: "Sandwich", price: 5.0, category: "Kid's Menu" },
+  { id: "K3", name: "Sandwich", price: 5.0, category: "Kid's Menu" },,
 
-  ];
+  { id: 'bread1', name: 'Italian Bread', price: 1.5, category: 'Bread Items' },
+  { id: 'bread2', name: 'Hero Bread', price: 1.5, category: 'Bread Items' },
+  { id: 'bread3', name: 'Seeded Semolina Bread Loaf', price: 4.0, category: 'Bread Items' },
+  { id: 'bread4', name: 'Ciabatta Bread', price: 4.0, category: 'Bread Items' },
+  { id: 'bread5', name: 'Seeded Twist', price: 3.0, category: 'Bread Items' },
+  { id: 'bread6', name: 'Olive Bread', price: 6.0, category: 'Bread Items' },
+  { id: 'bread7', name: 'Prosciutto Bread', price: 10.0, category: 'Bread Items' },
+  { id: 'bread8', name: 'Focaccia - Small', price: 3.75, category: 'Bread Items' },
+  { id: 'bread9', name: 'Focaccia - Large', price: 5.75, category: 'Bread Items' },,
+
+  { id: 'dessert1', name: 'Sorbets', price: 7.5, category: 'Desserts' },
+  { id: 'dessert2', name: 'Dessert Cups', price: 4.79, category: 'Desserts' },
+  { id: 'dessert3', name: 'Tartufo', price: 4.5, category: 'Desserts' },
+  { id: 'dessert4', name: 'Tortoni', price: 2.5, category: 'Desserts' },
+  { id: 'dessert5', name: 'Spumoni Pieces', price: 2.5, category: 'Desserts' },
+  { id: 'dessert6', name: '7 Layer Cookies', price: 7.5, category: 'Desserts' },
+  { id: 'dessert7', name: 'Rainbow Crumb', price: 6.0, category: 'Desserts' },
+  { id: 'dessert8', name: 'Brownie with Vanilla Frosting', price: 2.0, category: 'Desserts' },
+  { id: 'dessert9', name: 'Cannoli Cookies', price: 8.0, category: 'Desserts' },
+  { id: 'dessert10', name: 'Lemon Twist Cookies', price: 8.0, category: 'Desserts' },
+  { id: 'dessert11', name: 'Black & White Cookies', price: 9.0, category: 'Desserts' },
+  { id: 'dessert12', name: 'Linzer Tart Cookies', price: 8.0, category: 'Desserts' },
+  { id: 'dessert13', name: "Grandmas Cookies", price: 5.25, category: 'Desserts' },
+  { id: 'dessert14', name: 'Cannoli Bar', price: 2.0, category: 'Desserts' },
+  { id: 'dessert15', name: 'Large Black & White Cookie', price: 3.0, category: 'Desserts' },,
+
+  { id: 'grocery1', name: 'Fresh Mozzarella', price: 6.5, category: 'Grocery Items' },
+  { id: 'grocery2', name: '3 for $17 Mozzarella', price: 17.0, category: 'Grocery Items' },
+  { id: 'grocery3', name: '8oz Smoked Mozzarella', price: 3.75, category: 'Grocery Items' },
+  { id: 'grocery4', name: 'Smoked Mozzarella', price: 7.0, category: 'Grocery Items' },
+  { id: 'grocery5', name: '8oz Regular Ciliegine', price: 4.39, category: 'Grocery Items' },
+  { id: 'grocery6', name: '8oz Marinated Ciliegine', price: 5.0, category: 'Grocery Items' },
+  { id: 'grocery7', name: '8oz Burrata Mozzarella', price: 6.0, category: 'Grocery Items' },
+  { id: 'grocery8', name: '8oz Bufala Mozzarella', price: 6.0, category: 'Grocery Items' },
+  { id: 'grocery9', name: '8oz Locatelli', price: 9.39, category: 'Grocery Items' },
+  { id: 'grocery10', name: '16oz Locatelli', price: 18.0, category: 'Grocery Items' },
+  { id: 'grocery11', name: 'Pizza Dough', price: 2.0, category: 'Grocery Items' },
+  { id: 'grocery12', name: 'Small Marinara Sauce', price: 4.5, category: 'Grocery Items' },
+  { id: 'grocery13', name: 'Large Marinara Sauce', price: 7.5, category: 'Grocery Items' },
+  { id: 'grocery14', name: 'Small Vodka Sauce', price: 5.0, category: 'Grocery Items' },
+  { id: 'grocery15', name: 'Large Vodka Sauce', price: 8.5, category: 'Grocery Items' },
+
+  { id: 'milk1', name: '1/4 Milk', price: 2.19, category: 'Milk' },
+  { id: 'milk2', name: '1/2 Gallon Milk', price: 3.69, category: 'Milk' },
+  { id: 'milk3', name: 'Gallon Milk', price: 5.49, category: 'Milk' },
+];
 
 const addonCategories = [
   { title: 'Extra Meat Options', options: [
@@ -274,7 +319,7 @@ const specialCustomAddons = [
   { name: 'Just Proscuitto or Veal (No Cheese)', price: 16 },
 ];
 
-const categories = ['All', 'Regular Heroes', 'Smoked Mozzarella Heroes', '"P" Heroes', 'Chips', 'Bread Items', 'Appetizers', "Kid's Menu", 'Beverages', 'Desserts', 'Grocery Items'];
+const categories = ['All', 'Regular Heroes', 'Smoked Mozzarella Heroes', '"P" Heroes', 'Chips', 'Bread Items', 'Appetizers', "Kid's Menu", 'Beverages', 'Desserts', 'Grocery Items', 'Milk'];
 
 function App() {
   const [cart, setCart] = useState([]);
