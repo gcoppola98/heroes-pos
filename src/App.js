@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
 const items = [
-  { id: '#22', name: 'BOOOOOOOO', price: 0 },
-  { id: '#22', name: 'Custom', price: 0 },
+  { id: '#22', name: ':)', price: 0 },
   { id: '#1', name: '#1', price: 16, category: 'Regular Heroes' },
   { id: '#2', name: '#2', price: 19, category: 'Regular Heroes' },
   { id: '#3', name: '#3', price: 20, category: 'Regular Heroes' },
